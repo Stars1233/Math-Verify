@@ -40,6 +40,7 @@ from sympy import (
     MatrixExpr,
     Mul,
     Number,
+    Integer,
     Rational,
     Set,
     StrictGreaterThan,
@@ -52,6 +53,7 @@ from sympy import (
     simplify,
     solve,
     zoo,
+    UnevaluatedExpr,
 )
 from sympy import FiniteSet as SympyFiniteSet
 from sympy.core.function import UndefinedFunction
@@ -94,6 +96,11 @@ def safe_sympy_doit(a: Basic | MatrixBase):
     return a
 
 
+def get_pct_val(expr, default=None):
+    if isinstance(expr, Mul) and len(expr.args) == 2 and expr.args[1] == UnevaluatedExpr(Rational(1, 100)):
+        return expr.args[0]
+    return default
+
 def is_atomic_or_pct_atomic(expr: Basic | MatrixBase, atomic_type: type) -> bool:
     """Check if expression is either an atomic type or percentage atomic type.
 
@@ -105,11 +112,11 @@ def is_atomic_or_pct_atomic(expr: Basic | MatrixBase, atomic_type: type) -> bool
         True if expr is atomic_type or percentage atomic type, False otherwise
     """
     return isinstance(expr, atomic_type) or (
-        # Check for percentage representation: latex2sympy_extended converts "X%" into X*Rational(1,100)
+        # Check for percentage representation: latex2sympy_extended converts "X%" into X*UnevaluatedExpr(Rational(1,100))
         # So we detect percentages by looking for this multiplication structure
         isinstance(expr, Mul)
         and len(expr.args) == 2
-        and expr.args[1] == Rational(1, 100)
+        and expr.args[1] == UnevaluatedExpr(Rational(1, 100))
         and isinstance(expr.args[0], atomic_type)
     )
 
@@ -159,6 +166,11 @@ def sympy_numeric_eq(
                 return a.round(float_rounding) == b.round(float_rounding)
             except Exception:
                 pass
+        # If it's 9% == 9, we can use integer comparison
+        elif is_atomic_or_pct_atomic(a, Integer) and is_atomic_or_pct_atomic(b, Integer):
+            a = get_pct_val(a, a)
+            b = get_pct_val(b, b)
+            return a == b
         else:
             return safe_sympy_doit(a) == safe_sympy_doit(b)
 

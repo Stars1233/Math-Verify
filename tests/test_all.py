@@ -173,6 +173,12 @@ def test_latex_notation(gold, pred, expected):
         ("$28\\%$", "$\\boxed{28 pct}", 1),   # failed
         ("$28\\%$", "$\\boxed{28 percent}", 1),  # failed
         ("$28\\%$", "$\\boxed{28 percentage}", 1),  # failed
+        ("$28\\%$", "28", 1),
+        ("$0.28$", "28", 0),
+        ("$28/100$", "28", 0),
+        ("$28$", "28/100", 0),
+        ("$\\frac{28}{100}$", "28", 0),
+        ("$28*\\frac{1}{100}$", "28", 0),
     ],
 )
 def test_percent_notation(gold, pred, expected):

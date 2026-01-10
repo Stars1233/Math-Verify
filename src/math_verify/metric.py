@@ -33,10 +33,6 @@ def math_metric(
             Extraction targets to use for predictions. Defaults to extracting simple math expressions.
         aggregation_function: Callable[[list[float]], float]
             Function to aggregate scores when multiple golds/predictions are present. Defaults to max.
-        fallback_mode: Literal["no_fallback", "first_match"]
-            How to perform extraction. Defaults to "first_match".
-            - "no_fallback": Only use first successfully parsed matches
-            - "first_match": Use the first successfully parsed match + first match irregardless the parsing success
         precision: int
             Number of decimal places to use when comparing numerical values. Defaults to 6.
 

@@ -307,7 +307,6 @@ gsm8k_lighteval = [
                         LatexExtractionConfig(),
                         ExprExtractionConfig(),
                     ),
-                    fallback_mode="first_match",
                 )
             ),
         ],

@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from sympy.core.expr import UnevaluatedExpr
 import logging
 import re
 from dataclasses import dataclass, field, replace
@@ -32,6 +33,7 @@ from latex2sympy2_extended.latex2sympy2 import (
     NormalizationConfig,
     latex2sympy,
     normalize_latex,
+    convert_to_pct,
 )
 from latex2sympy2_extended.sets import FiniteSet
 from sympy import Basic, MatrixBase, Number
@@ -444,10 +446,6 @@ def extract_expr(match: re.Match) -> tuple[str | sympy.Expr | None, str]:
         except Exception:
             pass
     return None, expr
-
-
-def convert_to_pct(number: Number):
-    return sympy.Mul(number, sympy.Rational(1, 100), evaluate=False)
 
 
 equation_split_regex = re.compile(r"(?<!\\|\<|\!|\>)=")
