@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1]
+### Changed
+- Bumped latex2sympy2_extended to 1.11.0, which adds:
+  - Support for gamma function/constant parsing (`\Gamma` and `\gamma`)
+  - Improvements to percentage parsing (better handling of spaces and deduplication)
+  - Fixes issues with evaluation
+
 ## [0.8.0]
 ### Added
 - Added `raise_on_error` parameter to `verify` and `parse` functions to optionally propagate internal exceptions.
